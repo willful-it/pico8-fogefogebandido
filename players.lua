@@ -1,50 +1,75 @@
 function create_players()
   players={}
+
+  --the cop
   cop={}
-  cop.x=20             --position
+  --position and movement
+  cop.x=20
   cop.y=88
   cop.flip=false
-  cop.spr_standing=0       --sprites
-  cop.spr_walking={1, 2, 3, 4}  
-  cop.is_walking=false --status
+  --sprites
+  cop.spr_stand=0
+  cop.spr_walk={0,1,2,3}
+  --status
+  cop.walking=false
   cop.lives=10
   cop.number=0
-  cop.spr_walking_curr=1
-  cop.spr_walking_ctrl=0
+  cop.spr_walk_curr=1
+  cop.spr_walk_ctrl=0
   add(players, cop)
+
+  --the thug
+  thug={}
+  --position and movement
+  thug.x=100
+  thug.y=88
+  thug.flip=true
+  --sprites
+  thug.spr_stand=6
+  thug.spr_walk={6,7,8,9}
+  --status
+  thug.walking=false
+  thug.lives=10
+  thug.number=1
+  thug.spr_walk_curr=1
+  thug.spr_walk_ctrl=0
+  add(players, thug)
 end
 
 function draw_players()
-  foreach(players, draw_player)
+  foreach(players,draw_player)
 end
 
 function draw_player(p)
-  if p.is_walking then
-    spr(p.spr_walking[p.spr_walking_curr], p.x, p.y, 1, 1, p.flip)
-    if p.spr_walking_ctrl==2 then
-      if p.spr_walking_curr>#p.spr_walking then
-        p.spr_walking_curr=1
-      else
-        p.spr_walking_curr+=1
+  if p.walking then
+    spr_player(p,p.spr_walk[p.spr_walk_curr])
+    if p.spr_walk_ctrl==2 then
+      p.spr_walk_curr+=1
+      if p.spr_walk_curr>#p.spr_walk then
+        p.spr_walk_curr=1
       end
-      p.spr_walking_ctrl=0
+      p.spr_walk_ctrl=0
     else
-      p.spr_walking_ctrl+=1
+      p.spr_walk_ctrl+=1
     end
   else
-    spr(p.spr_standing, p.x, p.y, 1, 1, p.flip)
+    spr_player(p,p.spr_stand)
   end
 end
 
+function spr_player(p,s)
+  spr(s,p.x,p.y,1,1,p.flip)
+end
+
 function handle_movement()
-  foreach(players, handle_player_movement)
+  foreach(players,handle_player_movement)
 end
 
 function handle_player_movement(p)
   if (btn(0,p.number) or btn(1,p.number)) then
-    p.is_walking=true
+    p.walking=true
   else
-    p.is_walking=false
+    p.walking=false
   end
 
   if (btn(0,p.number)) then --left
@@ -54,11 +79,11 @@ function handle_player_movement(p)
     p.flip=true
     print("left")
   end
-  if (btn(1, p.number)) then --right
+  if (btn(1,p.number)) then --right
     if not p.flip then
       p.x+=1
     end
     p.flip=false
   end
-  
+
 end

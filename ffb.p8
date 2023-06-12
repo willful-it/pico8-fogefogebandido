@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
---foge foge bandido (run run thug)
+--foge foge bandido/run run thug
 --by renato0307
 #include players.lua
 #include maps.lua
