@@ -27,19 +27,19 @@ function collide_wall(o)
     --get the sprite at the calculated position
     local foundsprite = mget(xpos, ypos)
     --stock in ‘d’ variable is the found sprite is a wall or not
-    local d = fget(foundsprite , fwall)
+    local d = fget(foundsprite , flg_wall)
     -- top right corner
     if d == false then
       d = fget(mget(flr((o.x + o.hitbox.x +
-      o.hitbox.w)/8),flr((o.y + o.hitbox.y)/8)),fwall)
+      o.hitbox.w)/8),flr((o.y + o.hitbox.y)/8)),flg_wall)
     end
     --bottom left corner
     if d == false then
-      d = fget(mget(flr((o.x + o.hitbox.x)/8),flr((o.y + o.hitbox.y +o.hitbox.h)/8)),fwall)
+      d = fget(mget(flr((o.x + o.hitbox.x)/8),flr((o.y + o.hitbox.y +o.hitbox.h)/8)),flg_wall)
     end
     --bottom right corner
     if d == false then
-      d = fget(mget(flr((o.x + o.hitbox.x + o.hitbox.w)/8),flr((o.y + o.hitbox.y + o.hitbox.h)/8)),fwall)
+      d = fget(mget(flr((o.x + o.hitbox.x + o.hitbox.w)/8),flr((o.y + o.hitbox.y + o.hitbox.h)/8)),flg_wall)
     end
 
     return d

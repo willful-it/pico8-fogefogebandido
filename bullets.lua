@@ -18,6 +18,10 @@ end
 function draw_bullets()
   for b in all(bullets) do
     spr(b.sprite,b.x,b.y)
+    if collide_wall(b) then
+      sfx(3)
+      del(bullets, b)
+    end
   end
 end
 

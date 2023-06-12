@@ -6,7 +6,6 @@ shots_per_second=2.0
 players={}
 bullets={}
 
---flag
+--flags
 flg_ground=0
 flg_wall=1
-
