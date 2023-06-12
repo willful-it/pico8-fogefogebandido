@@ -1,60 +1,35 @@
 function create_players()
-  local start_y=20
+  local hero=new_player(0,20,false,0,{0,1,2,3},4,5)
+  add(players, hero)
 
-  local hitbox={
-    x=0,
-    y=0,
-    w=7,
-    h=7
-}
-
-  gravity=0.2
-
-  players={}
-
-  --the cop
-  cop={}
-  --position and movement
-  cop.x=20
-  cop.y=start_y
-  cop.dy=gravity
-  cop.flip=false
-  cop.hitbox=hitbox
-  --sprites
-  cop.spr_stand=0
-  cop.spr_walk={0,1,2,3}
-  cop.spr_dead=4
-  --status
-  cop.walking=false
-  cop.on_ground=false
-  cop.dead=false
-  cop.lives=10
-  cop.number=0
-  cop.spr_walk_curr=1
-  cop.spr_walk_ctl=0
-  add(players, cop)
-
-  --the thug
-  thug={}
-  --position and movement
-  thug.x=100
-  thug.y=start_y
-  thug.dy=gravity
-  thug.flip=true
-  thug.hitbox=hitbox
-  --sprites
-  thug.spr_stand=6
-  thug.spr_walk={6,7,8,9}
-  thug.spr_dead=10
-  --status
-  thug.walking=false
-  thug.on_ground=false
-  thug.dead=false
-  thug.lives=10
-  thug.number=1
-  thug.spr_walk_curr=1
-  thug.spr_walk_ctl=0
+  local thug=new_player(1,100,true,6,{6,7,8,9},10,11)
   add(players, thug)
+end
+
+function new_player(number,x,flip,spr_stand,spr_walk,spr_dying,spr_dead)
+  local p={}
+  --position and movement
+  p.x=x
+  p.y=20
+  p.dy=gravity
+  p.flip=flip
+  p.hitbox={x=0,y=0,w=7,h=7}
+  --sprites
+  p.spr_stand=spr_stand
+  p.spr_walk=spr_walk
+  p.spr_dying=spr_dying
+  p.spr_dead=spr_dead
+  --status
+  p.walking=false
+  p.on_ground=false
+  p.dying=false
+  p.dead=false
+  p.lives=10
+  p.number=number
+  p.spr_walk_curr=1
+  p.spr_anim_ctl=0
+  p.last_shot_time=0
+  return p
 end
 
 function draw_players()
@@ -64,16 +39,18 @@ end
 function draw_player(p)
   if p.dead then
     spr_player(p,p.spr_dead)
+  elseif p.dying then
+    spr_player(p,p.spr_dying)
   elseif p.walking then
     spr_player(p,p.spr_walk[p.spr_walk_curr])
-    if p.spr_walk_ctl==2 then
+    if p.spr_anim_ctl==2 then
       p.spr_walk_curr+=1
       if p.spr_walk_curr>#p.spr_walk then
         p.spr_walk_curr=1
       end
-      p.spr_walk_ctl=0
+      p.spr_anim_ctl=0
     else
-      p.spr_walk_ctl+=1
+      p.spr_anim_ctl+=1
     end
   else
     spr_player(p,p.spr_stand)
@@ -102,7 +79,7 @@ function handle_gravity()
     if not p.on_ground then
       p.dy+=gravity
       p.y+=p.dy
-      while cmap(p) do
+      while collide_map(p) do
         p.on_ground=true
         p.y-=1
       end
@@ -117,22 +94,26 @@ function handle_gravity()
   end
 end
 
-
 function handle_player_shot_hit(p)
   if p.dead then
     --a dead player cannot be killed
     return
   end
   for b in all(bullets) do
-    if collide(p,b) then
-      p.dead=true
+    if collide(p,b) and
+       b.player_number != p.number then
+      del(bullets,b)
+      if not p.dying then
+        p.dying=true
+        p.spr_anim_ctl=10
+      end
       sfx(2)
     end
   end
 end
 
 function handle_player_shooting(p)
-  if not p.on_ground or p.dead then
+  if not p.on_ground or p.dying or p.dead then
     --we can't shoot while in the air
     --or dead
     return
@@ -143,14 +124,21 @@ function handle_player_shooting(p)
     if p.flip then
       dx=-1
     end
-    bullet=new_bullet(p.x+(dx*4),p.y-3,dx)
+    bullet=new_bullet(p.number,p.x+(dx*4),p.y-3,dx)
     add(bullets,bullet)
     sfx(1)
   end
 end
 
 function handle_player_movement(p)
-  if not p.on_ground or p.dead then
+  if p.dying and p.spr_anim_ctl > 0 then
+    p.spr_anim_ctl-=1
+  elseif p.dying and p.spr_anim_ctl == 0 then
+    p.dying=false
+    p.dead=true
+  end
+
+  if not p.on_ground or p.dying or p.dead then
     --we can't move right or left
     --if we are not in the ground
     --of if we are dead
@@ -177,21 +165,9 @@ function handle_player_movement(p)
   end
 
   p.y+=1 --to simulate the colision
-  p.on_ground=cmap(p)
+  p.on_ground=collide_map(p)
   if not p.on_ground then
     p.dy=gravity
   end
   p.y-=1
-end
-
-function cmap(o)
-  local x1=o.x/8
-  local y1=o.y/8
-  local x2=(o.x+7)/8
-  local y2=(o.y+7)/8
-  local a=fget(mget(x1,y1),flg_ground)
-  local b=fget(mget(x1,y2),flg_ground)
-  local c=fget(mget(x2,y2),flg_ground)
-  local d=fget(mget(x2,y1),flg_ground)
-  return a or b or c or d
 end

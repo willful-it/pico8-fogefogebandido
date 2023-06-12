@@ -8,11 +8,11 @@ the heroes need to get the thug.
 
 ## cartridge
 
-![Alt text](ffb.p8.png "foge foge bandido").
+![Alt text](docs/ffb.p8.png "foge foge bandido").
 
 ## demo
 
-![Alt text](ffb_0.gif "foge foge bandido demo").
+![Alt text](docs/ffb_0.gif "foge foge bandido demo").
 
 ## todo and idea list
 

@@ -1,6 +1,5 @@
 
 function _init()
-  config_map()
   create_players()
 end
 
