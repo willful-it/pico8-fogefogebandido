@@ -1,5 +1,6 @@
 --settings
 gravity=0.2
+shots_per_second=2.0
 
 --state
 players={}

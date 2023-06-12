@@ -87,7 +87,6 @@ function handle_gravity()
     if p.on_ground then
       p.dy=0
       if not prv_on_ground then
-        printh("sound"..tostr(p.number),"logs.txt")
         sfx(0)
       end
     end
@@ -95,13 +94,12 @@ function handle_gravity()
 end
 
 function handle_player_shot_hit(p)
-  if p.dead then
+  if p.dying or p.dead then
     --a dead player cannot be killed
     return
   end
   for b in all(bullets) do
-    if collide(p,b) and
-       b.player_number != p.number then
+    if collide(p,b) and b.player_number != p.number then
       del(bullets,b)
       if not p.dying then
         p.dying=true
@@ -118,14 +116,20 @@ function handle_player_shooting(p)
     --or dead
     return
   end
-
   if (btnp(4,p.number)) then
+    if t()-p.last_shot_time < (1/shots_per_second) then
+      --allow only two shots per second
+      --otherwise it would be to easy
+      --to kill the opponent
+      return
+    end
     local dx=1
     if p.flip then
       dx=-1
     end
     bullet=new_bullet(p.number,p.x+(dx*4),p.y-3,dx)
     add(bullets,bullet)
+    p.last_shot_time=t()
     sfx(1)
   end
 end
