@@ -1,5 +1,13 @@
 function create_players()
   local start_y=20
+
+  local hitbox={
+    x=0,
+    y=0,
+    w=7,
+    h=7
+}
+
   gravity=0.2
 
   players={}
@@ -11,12 +19,15 @@ function create_players()
   cop.y=start_y
   cop.dy=gravity
   cop.flip=false
+  cop.hitbox=hitbox
   --sprites
   cop.spr_stand=0
   cop.spr_walk={0,1,2,3}
+  cop.spr_dead=4
   --status
   cop.walking=false
   cop.on_ground=false
+  cop.dead=false
   cop.lives=10
   cop.number=0
   cop.spr_walk_curr=1
@@ -30,12 +41,15 @@ function create_players()
   thug.y=start_y
   thug.dy=gravity
   thug.flip=true
+  thug.hitbox=hitbox
   --sprites
   thug.spr_stand=6
   thug.spr_walk={6,7,8,9}
+  thug.spr_dead=10
   --status
   thug.walking=false
   thug.on_ground=false
+  thug.dead=false
   thug.lives=10
   thug.number=1
   thug.spr_walk_curr=1
@@ -48,7 +62,9 @@ function draw_players()
 end
 
 function draw_player(p)
-  if p.walking then
+  if p.dead then
+    spr_player(p,p.spr_dead)
+  elseif p.walking then
     spr_player(p,p.spr_walk[p.spr_walk_curr])
     if p.spr_walk_ctl==2 then
       p.spr_walk_curr+=1
@@ -72,6 +88,14 @@ function handle_movement()
   foreach(players,handle_player_movement)
 end
 
+function handle_shooting()
+  foreach(players,handle_player_shooting)
+end
+
+function handle_shot_hits()
+  foreach(players,handle_player_shot_hit)
+end
+
 function handle_gravity()
   for p in all(players) do
     local prv_on_ground=p.on_ground
@@ -93,22 +117,43 @@ function handle_gravity()
   end
 end
 
-function cmap(o)
-  local x1=o.x/8
-  local y1=o.y/8
-  local x2=(o.x+7)/8
-  local y2=(o.y+7)/8
-  local a=fget(mget(x1,y1),flg_ground)
-  local b=fget(mget(x1,y2),flg_ground)
-  local c=fget(mget(x2,y2),flg_ground)
-  local d=fget(mget(x2,y1),flg_ground)
-  return a or b or c or d
+
+function handle_player_shot_hit(p)
+  if p.dead then
+    --a dead player cannot be killed
+    return
+  end
+  for b in all(bullets) do
+    if collide(p,b) then
+      p.dead=true
+      sfx(2)
+    end
+  end
+end
+
+function handle_player_shooting(p)
+  if not p.on_ground or p.dead then
+    --we can't shoot while in the air
+    --or dead
+    return
+  end
+
+  if (btnp(4,p.number)) then
+    local dx=1
+    if p.flip then
+      dx=-1
+    end
+    bullet=new_bullet(p.x+(dx*4),p.y-3,dx)
+    add(bullets,bullet)
+    sfx(1)
+  end
 end
 
 function handle_player_movement(p)
-  if not p.on_ground then
+  if not p.on_ground or p.dead then
     --we can't move right or left
     --if we are not in the ground
+    --of if we are dead
     return
   end
 
@@ -137,4 +182,16 @@ function handle_player_movement(p)
     p.dy=gravity
   end
   p.y-=1
+end
+
+function cmap(o)
+  local x1=o.x/8
+  local y1=o.y/8
+  local x2=(o.x+7)/8
+  local y2=(o.y+7)/8
+  local a=fget(mget(x1,y1),flg_ground)
+  local b=fget(mget(x1,y2),flg_ground)
+  local c=fget(mget(x2,y2),flg_ground)
+  local d=fget(mget(x2,y1),flg_ground)
+  return a or b or c or d
 end
