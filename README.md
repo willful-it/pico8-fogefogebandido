@@ -18,7 +18,7 @@ the heroes need to get the thug.
 
 * shots/bullets with colision detection
 * lives
-* gravity
+* ~~gravity~~
 * jumping
 * blood spill
 * dying sprites
