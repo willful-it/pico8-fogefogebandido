@@ -10,11 +10,10 @@ function _draw()
   draw_bullets()
 end
 
-function _update()
+function _update60()
   handle_shot_hits()
   handle_shooting()
-  handle_gravity()
-  handle_movement()
   update_bullets()
+  handle_movement()
 end
 
