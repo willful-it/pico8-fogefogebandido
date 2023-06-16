@@ -1,4 +1,3 @@
-
 function init_player(i)
   i.jump_timer=0
   i.jump=false
@@ -22,7 +21,7 @@ function update_player(i)
 
   if solid_at(i.x,i.y+1,8,8) then
     if not i.grnd then
-      i.grnd=true;
+      i.grnd=true
     end
     i.grnd=true
   else
@@ -46,22 +45,29 @@ function update_player(i)
   end
 
   i.jump=btn(4,i.number)
+
+  --shot
+  if btnp(5,i.number) then
+    shoot(i)
+  end
+
+  update_bullets(i.weapon.bullets)
 end
 
 function draw_player(i)
-  local sprites=i.spr_stand
+  local sprites={}
   if i.jump then
-    log("draw jumping")
     sprites=i.spr_jump
   elseif i.grnd and i.spd.x!=0 then --walk
-    log("draw move")
     sprites=i.spr_move
   else
-    log("draw stand")
+    sprites=i.spr_stand
   end
   if i.anim_ctl>#sprites then
     i.anim_ctl=1
   end
   draw_object_spr(i,sprites[i.anim_ctl])
   i.anim_ctl+=1
+
+  draw_player_weapon(i)
 end
