@@ -12,6 +12,8 @@ function update_bullet(b)
   p=player_at(b.x,b.y,b.hitbox.w,b.hitbox.h)
   if p != nil then
     player_hit(p)
+    local shooting_player=get_player(b.player_number)
+    make_blood_ps(p.x,rnd(10)+p.y,shooting_player.flipx)
     del(objects,b)
   end
 end

@@ -113,3 +113,7 @@ function player_hit(p)
     del(objects, p)
   end
 end
+
+function get_player(number)
+  return players[number+1]
+end

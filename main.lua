@@ -28,27 +28,21 @@ function _init()
 
   add(players,player0)
   add(players,player1)
-  -- player2={
-  --   tile=1,
-  --   number=2,
-  --   draw=draw_player,
-  --   update=update_player,
-  --   init=init_player,
-  --   spr_move={33,34,35},
-  --   spr_jump={35},
-  --   spr_stand={33},
-  --   weapon=small_sword
-  -- }
-  -- init_object(player2,50,0)
+
+  make_starfield_ps()
 end
 
 function _update()
   foreach(objects,update_object)
+  update_psystems()
 end
 
 function _draw()
   -- clear the screen
   cls(0)
+	for ps in all(particle_systems) do
+		draw_ps(ps)
+	end  
   map(room.x,room.y,0,0)
   foreach(objects,draw_object)
   draw_players_life()
