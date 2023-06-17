@@ -4,7 +4,15 @@ end
 function update_bullet(b)
   b.x+=b.spd.x
   if b.x<0 or b.x>128 or b.spd.x==0 then
-    del(objects, b)
+    del(objects,b)
+  end
+
+  log("b.x="..b.x)
+  log("b.y="..b.y)
+  p=player_at(b.x,b.y,b.hitbox.w,b.hitbox.h)
+  if p != nil then
+    player_hit(p)
+    del(objects,b)
   end
 end
 

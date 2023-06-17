@@ -26,6 +26,8 @@ function _init()
   }
   init_object(player1,100,0)
 
+  add(players,player0)
+  add(players,player1)
   -- player2={
   --   tile=1,
   --   number=2,

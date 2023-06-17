@@ -1,3 +1,5 @@
+players={}
+
 function init_player(i)
   i.jump_timer=0
   i.jump=false
@@ -52,7 +54,6 @@ function update_player(i)
   end
 
   --handle screen limit
-
   if i.x<0 then i.x=0 end
   if i.x>120 then i.x=120 end
 end
@@ -73,4 +74,27 @@ function draw_player(i)
   i.anim_ctl+=1
 
   draw_player_weapon(i)
+end
+
+function player_at(x,y,w,h)
+  for i=flr(x),(x+w-1) do
+    for j=flr(y),(y+h-1) do
+      for p in all(players) do
+        log("j="..j)
+        log("i="..i)
+        log(p.number.." p.x="..p.x)
+        log(p.number.." p.y="..p.y)
+        if i>=p.x+p.hitbox.x and i<=p.x+p.hitbox.x+p.hitbox.w 
+        and j>=p.y+p.hitbox.y and i<=p.y+p.hitbox.y+p.hitbox.h then 
+          return p
+        end
+      end
+    end
+  end
+  return nil
+end
+
+function player_hit(p)
+  del(players, p)
+  del(objects, p)
 end
