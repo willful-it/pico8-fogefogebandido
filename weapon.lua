@@ -32,3 +32,4 @@ end
 gun=init_weapon(11,{12},{x=3,y=4,w=2,h=1})
 uzi=init_weapon(27,{28},{x=3,y=1,w=2,h=5})
 small_sword=init_weapon(43,{44},{x=0,y=4,w=7,h=2})
+axe=init_weapon(59,{60},{x=0,y=0,w=7,h=7})

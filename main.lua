@@ -22,7 +22,7 @@ function _init()
     spr_move={22,23,24},
     spr_jump={24},
     spr_stand={22},
-    weapon=small_sword
+    weapon=gun
   }
   init_object(player1,100,0)
 
@@ -51,4 +51,5 @@ function _draw()
   cls(0)
   map(room.x,room.y,0,0)
   foreach(objects,draw_object)
+  draw_players_life()
 end
