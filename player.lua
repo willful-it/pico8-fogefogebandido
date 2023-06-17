@@ -51,7 +51,10 @@ function update_player(i)
     shoot(i)
   end
 
-  update_bullets(i.weapon.bullets)
+  --handle screen limit
+
+  if i.x<0 then i.x=0 end
+  if i.x>120 then i.x=120 end
 end
 
 function draw_player(i)

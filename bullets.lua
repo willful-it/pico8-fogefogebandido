@@ -1,27 +1,31 @@
-function new_bullet(pn,x,y,dx,sprite)
-  local obj={}
-  obj.x=x
-  obj.y=y
-  obj.dx=dx
+function init_bullet(b)
+end
+
+function update_bullet(b)
+  b.x+=b.spd.x
+  if b.x<0 or b.x>128 or b.spd.x==0 then
+    del(objects, b)
+  end
+end
+
+function draw_bullet(b)
+  spr(b.sprite,b.x,b.y,1,1,b.flipx,false)
+end
+
+function new_bullet(pn,x,y,flipx,sprite,hitbox)
+  obj={}
   obj.sprite=sprite
   obj.player_number=pn
-  obj.hitbox={x=3,y=5,w=3,h=1}
-  return obj
-end
+  obj.draw=draw_bullet
+  obj.update=update_bullet
+  obj.init=init_bullet
+  init_object(obj,x,y,hitbox)
+  obj.flipx=flipx
 
-function update_bullets(bullets)
-  for b in all(bullets) do
-    b.x+=b.dx*1
-    if b.x<0 or b.x>128 then
-      del(bullets, b)
-    end
+  if flipx then
+    obj.spd.x=-4
+  else
+    obj.spd.x=4
   end
+  return obj 
 end
-
-function draw_bullets(bullets,flipx,flipy)
-  log("drawing bullets="..#bullets)
-  for b in all(bullets) do
-    spr(b.sprite,b.x,b.y,1,1,flipx,flipy)
-  end
-end
-
