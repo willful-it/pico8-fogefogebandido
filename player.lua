@@ -1,3 +1,5 @@
+players={}
+
 function init_player(i)
   i.jump_timer=0
   i.jump=false
@@ -5,6 +7,8 @@ function init_player(i)
   i.step_interval=0
   i.max_spd.y=4
   i.anim_ctl=1
+  i.lifes=5
+  i.spr_heart=76
 end
 
 function update_player(i)
@@ -51,7 +55,9 @@ function update_player(i)
     shoot(i)
   end
 
-  update_bullets(i.weapon.bullets)
+  --handle screen limit
+  if i.x<0 then i.x=0 end
+  if i.x>120 then i.x=120 end
 end
 
 function draw_player(i)
@@ -70,4 +76,44 @@ function draw_player(i)
   i.anim_ctl+=1
 
   draw_player_weapon(i)
+end
+
+function draw_players_life()
+  for p in all(players) do
+    spr(p.spr_stand[1],1,p.number*7+1,1,5/6)
+    for i=1,p.lifes do
+      spr(112,6*i+4,p.number*7+1)
+    end
+  end
+end
+
+function player_at(x,y,w,h)
+  for i=flr(x),(x+w-1) do
+    for j=flr(y),(y+h-1) do
+      for p in all(players) do
+        log("j="..j)
+        log("i="..i)
+        log(p.number.." p.x="..p.x)
+        log(p.number.." p.y="..p.y)
+        if i>=p.x+p.hitbox.x and i<=p.x+p.hitbox.x+p.hitbox.w 
+        and j>=p.y+p.hitbox.y and i<=p.y+p.hitbox.y+p.hitbox.h then 
+          return p
+        end
+      end
+    end
+  end
+  return nil
+end
+
+function player_hit(p)
+  p.lifes-=1
+
+  if p.lifes==0 then
+    del(players, p)
+    del(objects, p)
+  end
+end
+
+function get_player(number)
+  return players[number+1]
 end
