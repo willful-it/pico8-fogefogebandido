@@ -27,6 +27,7 @@ function shoot(i)
   end
   new_bullet(i.number,i.x+(dx*7),i.y,i.flipx,i.weapon.spr_shot[1],i.weapon.bullet_hitbox)
   i.weapon.last_shot_time=t()
+  sfx(1)
 end
 
 gun=init_weapon(11,{12},{x=3,y=4,w=2,h=1})

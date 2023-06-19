@@ -7,8 +7,8 @@ function update_bullet(b)
     del(objects,b)
   end
 
-  log("b.x="..b.x)
-  log("b.y="..b.y)
+  --log("b.x="..b.x)
+  --log("b.y="..b.y)
   p=player_at(b.x,b.y,b.hitbox.w,b.hitbox.h)
   if p != nil and p.number !=b.player_number then
     local shooting_player=get_player(b.player_number)
