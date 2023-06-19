@@ -90,14 +90,14 @@ end
 function player_at(x,y,w,h)
   for i=flr(x),(x+w-1) do
     for j=flr(y),(y+h-1) do
-      log("i(x)="..i)
-      log("j(y)="..j)
+      --log("i(x)="..i)
+      --log("j(y)="..j)
       for p in all(players) do
-        log(p.number.." p.x+p.hitbox.x="..(p.x+p.hitbox.x))
-        log(p.number.." p.x+p.hitbox.x+p.hitbox.w="..(p.x+p.hitbox.x+p.hitbox.w))
-        log(p.number.." p.y+p.hitbox.y="..(p.y+p.hitbox.y))
-        log(p.number.." p.y+p.hitbox.y+p.hitbox.h="..(p.y+p.hitbox.y+p.hitbox.h))
-        log("player at? "..tostr(i>=p.x+p.hitbox.x and i<=p.x+p.hitbox.x+p.hitbox.w and j>=p.y+p.hitbox.y and i<=p.y+p.hitbox.y+p.hitbox.h))
+        --log(p.number.." p.x+p.hitbox.x="..(p.x+p.hitbox.x))
+        --log(p.number.." p.x+p.hitbox.x+p.hitbox.w="..(p.x+p.hitbox.x+p.hitbox.w))
+        --log(p.number.." p.y+p.hitbox.y="..(p.y+p.hitbox.y))
+        --log(p.number.." p.y+p.hitbox.y+p.hitbox.h="..(p.y+p.hitbox.y+p.hitbox.h))
+        --log("player at? "..tostr(i>=p.x+p.hitbox.x and i<=p.x+p.hitbox.x+p.hitbox.w and j>=p.y+p.hitbox.y and i<=p.y+p.hitbox.y+p.hitbox.h))
         if i>=p.x+p.hitbox.x and i<=p.x+p.hitbox.x+p.hitbox.w and j>=p.y+p.hitbox.y and j<=p.y+p.hitbox.y+p.hitbox.h then 
           return p
         end
@@ -113,6 +113,7 @@ function player_hit(p)
   if p.lifes==0 then
     del(players, p)
     del(objects, p)
+    sfx(0)
   end
 end
 
