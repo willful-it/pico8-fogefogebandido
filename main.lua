@@ -29,7 +29,7 @@ function _init()
   add(players,player0)
   add(players,player1)
 
-  make_starfield_ps()
+  --make_starfield_ps()
 end
 
 function _update()
