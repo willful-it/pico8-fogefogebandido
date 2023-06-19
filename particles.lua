@@ -95,7 +95,7 @@ function make_blood_ps(ex,ey,flipx)
 	add(ps.affectors,
 		{ 
 			affectfunc = affect_force,
-			params = { fx = 0.4*sg, fy = 0.4 }
+			params = { fx = 0.2*sg, fy = 0.4 }
 		}
 	)
 	add(ps.affectors,
